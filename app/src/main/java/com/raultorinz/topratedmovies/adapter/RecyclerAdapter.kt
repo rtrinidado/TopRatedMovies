@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.raultorinz.topratedmovies.R
-import com.raultorinz.topratedmovies.model.MovieModel
+import com.raultorinz.topratedmovies.data.model.MovieModel
 import kotlinx.android.synthetic.main.movie_card_layout.view.*
 
-class RecyclerAdapter (private val context: Context) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
-    private var movieList: List<MovieModel>? = null
+class RecyclerAdapter (private val movieList: ArrayList<MovieModel>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var movieImg = itemView.movieImg
@@ -40,7 +39,8 @@ class RecyclerAdapter (private val context: Context) : RecyclerView.Adapter<Recy
     }
 
     fun setMoviesList (movies: List<MovieModel>) {
-        movieList = movies
+        movieList.clear()
+        movieList.addAll(movies)
         notifyDataSetChanged()
     }
 }
