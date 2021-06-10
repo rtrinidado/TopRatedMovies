@@ -16,12 +16,15 @@ import com.raultorinz.topratedmovies.data.api.ApiHelper
 import com.raultorinz.topratedmovies.data.api.RetrofitBuilder
 import com.raultorinz.topratedmovies.data.model.MovieModel
 import com.raultorinz.topratedmovies.ui.base.ViewModelFactory
-import com.raultorinz.topratedmovies.utils.Status
 import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerAdapter? = null
+    var topMovies : ArrayList<MovieModel>? = null
 
     companion object {
         fun newInstance() = MainFragment()
@@ -38,22 +41,16 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, ViewModelFactory(ApiHelper(RetrofitBuilder.apiService))).get(MainViewModel::class.java)
 
-
         layoutManager = GridLayoutManager(context, 3)
         recyclerView.layoutManager = layoutManager
-        adapter = RecyclerAdapter(ArrayList<MovieModel>())
+        adapter = RecyclerAdapter()
         recyclerView.adapter = adapter
 
-        viewModel.getTopRatedMovies().observe(viewLifecycleOwner, Observer {
-            it?.let {
-                resource ->
-                when (resource.status) {
-                    Status.SUCCESS -> resource.data?.let { response -> retrieveList(response)}
-                    Status.ERROR -> Log.e("network", it.message!!)
-                    Status.LOADING -> recyclerView.visibility = View.GONE
-                }
-            }
-        })
+        CoroutineScope(Dispatchers.Main).launch {
+            val result : List<MovieModel>? = viewModel.getMoviesList().await()
+            if (result != null)
+                retrieveList(result)
+        }
     }
 
     private fun retrieveList(movies: List<MovieModel>) {
