@@ -4,4 +4,5 @@
     <string name="rated">Calificación</string>
     <string name="release_date">Fecha de estreno</string>
     <string name="best_rated_movies">Películas mejor evaluadas</string>
+    <string name="had_an_error">Ha ocurrido un error al cargar los datos</string>
 </resources>
