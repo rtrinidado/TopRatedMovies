@@ -1,14 +1,12 @@
 package com.raultorinz.topratedmovies.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.raultorinz.topratedmovies.R
 import com.raultorinz.topratedmovies.adapter.RecyclerAdapter
@@ -24,7 +22,6 @@ import kotlinx.coroutines.launch
 class MainFragment : Fragment() {
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerAdapter? = null
-    var topMovies : ArrayList<MovieModel>? = null
 
     companion object {
         fun newInstance() = MainFragment()
@@ -41,15 +38,19 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, ViewModelFactory(ApiHelper(RetrofitBuilder.apiService))).get(MainViewModel::class.java)
 
-        layoutManager = GridLayoutManager(context, 3)
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
         adapter = RecyclerAdapter()
         recyclerView.adapter = adapter
 
         CoroutineScope(Dispatchers.Main).launch {
             val result : List<MovieModel>? = viewModel.getMoviesList().await()
-            if (result != null)
-                retrieveList(result)
+            if (result != null) {
+                if (result.size > 10)
+                    retrieveList(result.subList(0, 10))
+                else
+                    retrieveList(result)
+            }
         }
     }
 
