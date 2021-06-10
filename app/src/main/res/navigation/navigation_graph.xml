@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.raultorinz.topratedmovies.ui.main.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.raultorinz.topratedmovies.ui.details.DetailsFragment"
+        android:label="DetailsFragment" >
+        <argument
+            android:name="title"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="original_title"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="vote_average"
+            app:argType="float" />
+        <argument
+            android:name="release_date"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="overview"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="poster_path"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+</navigation>
